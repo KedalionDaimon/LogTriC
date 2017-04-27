@@ -1,7 +1,3 @@
-/* difference to other snowflake / sledge:
-   reconsider in the end again the ORIGINAL input pair. */
-   
-   
 /*
 This program serves to demonstrate an artificial intellgence operating
 by means of Logical Triangulation.
@@ -13,7 +9,7 @@ numbers that represent symbols of sensory perception, so-called
 "elementary atoms". If the input is "empty", evaluation terminates.
 That is why the atom "0" is special: nothing is really done with the
 atom 0.
- 
+
 2. It is attempted to "hierarchise" that input, that is, to group
 together symbols in vic-connections. If the input initially consisted
 out of "K L M N A B C D" and X is symbolising A-B, then the input
@@ -132,7 +128,7 @@ int cohabitant[maxtriangles][5];
 
 /* Cohabitants can be CONCLUSIONS,
 that is SO FAR UNKNOWN ATOMS, or -
-HYPOTHESIS. */
+HYPOTHESES. */
 int hypotheses[maxtriangles][4];
 /* auxiliary arrays: */
 int scrubhypotheses[maxtriangles][4];
@@ -583,26 +579,34 @@ for (h = 0; h < sledge; h++) {
       looking to find B=C (again, without regard to vic or
       ana). */
       
-      /* test */
-      
-      /* SNOWFLAKE:
-      This is a mechanism where you "follow the sides of a triangle",
-      that is, if you find + A-B=C-A, you then ALSO treat B=C and C-A
-      as "original" atoms - this helps to spread the effects of
-      logical triangulation throughout the knowledge base due to having
-      more correlations. */
-      
-      for (i = 0; i < maxtriangles; i++) {
-        printf("SNOWFLAKE: COHABITANT PRE-SEARCH: %d %d %d %d\n",cohabitant[i][0], cohabitant[i][1], cohabitant[i][2], cohabitant[i][3]);
-      }
-      printf("\n\nAVAILABLE ATOMS:\n");
-      for (i = 0; i < atomcount; i++) {
-        printf("%d %d %d %d\n", atoms[i][0], atoms[i][1], atoms[i][2], atoms[i][3]);
-      }
-      /* end test */
-      
       for (j = 0; j < maxtriangles; j++) {
         alreadydone = 0;
+
+        /* the triangle must not contain a "same side" as the
+           given original side, or else you get repeated atoms
+           in the list of all atoms: */
+
+        if ((((cohabitant[j][leftatom] == atoms[0][leftatom]) &&
+           (cohabitant[j][rightatom] == atoms[0][rightatom])) ||
+           ((cohabitant[j][rightatom] == atoms[0][leftatom]) &&
+           (cohabitant[j][leftatom] == atoms[0][rightatom]))) ||
+           (((conjugate[j][leftatom] == atoms[0][leftatom]) &&
+           (conjugate[j][rightatom] == atoms[0][rightatom])) ||
+           ((conjugate[j][rightatom] == atoms[0][leftatom]) &&
+           (conjugate[j][leftatom] == atoms[0][rightatom])))) {
+
+          cohabitant[j][atomnumber]      = 0;
+          cohabitant[j][leftatom]        = 0;
+          cohabitant[j][rightatom]       = 0;
+          cohabitant[j][atomvalue]       = 0;
+          cohabitant[j][positioninatoms] = 0;
+        
+          conjugate[j][atomnumber]       = 0;
+          conjugate[j][leftatom]         = 0;
+          conjugate[j][rightatom]        = 0;
+          conjugate[j][atomvalue]        = 0;
+          conjugate[j][positioninatoms]  = 0;
+        }
       
         /* not i = 0, because 0 is the original atom */
         for (i = 1; i < atomcount; i++) {
@@ -647,10 +651,6 @@ for (h = 0; h < sledge; h++) {
             break;
           }
         }
-      }
-      
-      for (i = 0; i < maxtriangles; i++) {
-        printf("SNOWFLAKE: COHABITANT POST-SEARCH: %d %d %d %d\n",cohabitant[i][0], cohabitant[i][1], cohabitant[i][2], cohabitant[i][3]);
       }
       
       /* TRIANGULATE */
@@ -850,7 +850,7 @@ for (h = 0; h < sledge; h++) {
       }
       
       
-      /* You know have transferred all values to all KNOWN atoms -
+      /* You now have transferred all values to all KNOWN atoms -
       but what happens when atoms are NOT KNOWN, however CONCLUDED
       by means of logical triangulation? Well - you generate hypotheses.
       For this, you will need to "forget" atoms to make space for new
@@ -864,9 +864,8 @@ for (h = 0; h < sledge; h++) {
       
       /* test */
       printf("\n\nHYPOTHESES BEFORE SCRUBBING:\n");
-      for (i = 0; i < hypothesescount - 1; i = i + 2) {
-        printf("%d %d %d %d\t\t%d %d %d %d\n", hypotheses[i][0], hypotheses[i][1], hypotheses[i][2], hypotheses[i][3],
-               hypotheses[i + 1][0], hypotheses[i + 1][1], hypotheses[i + 1][2], hypotheses[i + 1][3]);
+      for (i = 0; i < maxtriangles; i++) {
+        printf("%d %d %d %d\n", hypotheses[i][0], hypotheses[i][1], hypotheses[i][2], hypotheses[i][3]);
       }
       /* end test */
       
@@ -944,9 +943,8 @@ for (h = 0; h < sledge; h++) {
       
       /* test */
       printf("\n\nHYPOTHESES AFTER SCRUBBING:\n");
-      for (i = 0; i < hypothesescount - 1; i = i + 2) {
-        printf("%d %d %d %d\t\t%d %d %d %d\n", hypotheses[i][0], hypotheses[i][1], hypotheses[i][2], hypotheses[i][3],
-               hypotheses[i + 1][0], hypotheses[i + 1][1], hypotheses[i + 1][2], hypotheses[i + 1][3]);
+      for (i = 0; i < maxtriangles; i++) {
+        printf("%d %d %d %d\n", hypotheses[i][0], hypotheses[i][1], hypotheses[i][2], hypotheses[i][3]);
       }
       /* end test */
       
