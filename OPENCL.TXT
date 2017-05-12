@@ -1,0 +1,7 @@
+HOW TO COMPILE OPENCL:
+
+gcc -I/opt/AMDAPPSDK-2.9-1/include -L/opt/AMDAPPSDK-2.9-1/lib/x86_64 -o tric tric_parser_ocl20170507.c -lm -lOpenCL -g
+
+/usr/local/cuda/bin/nvcc -I/usr/local/cuda/include -L/usr/local/cuda/lib64 -o tric tric_parser_ocl20170507.c -lm -lOpenCL -g
+
+
