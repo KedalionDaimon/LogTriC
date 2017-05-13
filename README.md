@@ -9,7 +9,17 @@ You can compile any of these programs on Linux e.g. as follows:
 
 gcc -O3 -o tric tric_whatever.c -lm
 
+You also need to create new atoms with
+
+gcc -o atomgen atomgen.c
+
 and then:
+
+./atomgen
+
+this will generate a 40MB data file.
+
+And then you just do:
 
 ./tric
 
